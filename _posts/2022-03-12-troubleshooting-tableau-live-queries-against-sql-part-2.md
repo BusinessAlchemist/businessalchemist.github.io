@@ -19,7 +19,7 @@ Here is a list of things that Tableau does to retrieve data for you - and the th
       Simple filters are normally better. I.e.:
          `WHERE a=1`
       normally works faster then
-         `WHERE a = CASE WHEN someNumber = 'one' THEN 1 ELSE 0 END`   
+         `WHERE a = CASE WHEN someNumberDescription = 'one' THEN 1 ELSE 0 END`   
       📝 Make sure that your filters are expressed as simple as possible and use the unchanged columns from the data source.
 
    4. Tableau generates bad type conversions (i.e. call everything nvarchar (9000))   
@@ -35,3 +35,16 @@ Here is a list of things that Tableau does to retrieve data for you - and the th
    6. Some formulas yield code like “CASE WHEN 1=0 THEN …. ELSE … END”,\
       If you see them, look for the column they reference and try to drop this column from the dashboard / guess the reason why such structure is added.
    7. Tableau generates ugly joins with subqueries  
+      Tableau introduced the 'new' join logic - it generates joins to subqueries, not the individual views. Better place all objects in one container (to phrase it better an place a screenshot to aid understanding).
+
+### Where do I start from?
+
+First step would probably be to assess how bad the SQL query is. In most severe cases, you might want to rebuild your viz from scratch - only adding the necessary things to the screen. But most likely, you'll need just a cleanup. My cleanup sequence goes like this:
+1) Drop unnecessary filters from the dashboard
+2) Cleanup the WHERE predicates,
+3) Remove all subqueries in JOINs
+4) Cleanup type casts in the SELECT area,
+When you're satisfied with how your queries look like, you can try executing them in SSMS and start with performance optimization on the DB side
+
+
+
