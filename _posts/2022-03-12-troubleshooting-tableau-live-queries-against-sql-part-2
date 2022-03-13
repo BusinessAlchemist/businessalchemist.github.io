@@ -1,1 +1,10 @@
 ## Part 2
+
+Most frequent problems to be found at diagnostics stage:
+1. Tableau generates a distinct query for each filter you have on a dashboard,
+2. Tableau executes queries sequentially (if there are too many – then it shows in performance),
+3. T. generates ugly joins
+4. T. generates bad type conversions (i.e. turn everything nvarchar (9000),
+5. LOD’s normally show up very poor in the code
+6. WHERE predicates are far too complex and non-sargable,
+7. Some formulas yield code like “CASE WHEN 1=0 THEN …. ELSE … END”,
