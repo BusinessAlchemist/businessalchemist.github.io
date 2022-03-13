@@ -29,7 +29,7 @@ Let's review what is happenning every time when a user presses a refresh button.
 
 Every time user clicks refresh:
 1. Tableau engine would create a set of SQL queries it deems necessary to (optimally) retrieve data from the DB.
-2. These queries are then executed at the SQL server in some order,
+2. These queries are then executed at the SQL server in some order[^1] [^2].,
 3. The DB, having received a query, determines the (optimal) execution plan and sends the results back to Tableau
 4. Tableau renders them in your viz.
 
@@ -44,3 +44,7 @@ Well, there are (at least) 2 good ways to do this:
    - (TBC)
 
 Now that you know how to see the exact queries that are executed on the server, you can skip to part 2.
+
+[^1] If you're using tableau desktop, then the queries will use your AD account to authenticate and query SQL Server. If you are refreshing data from the Tableau server, it uses the *ServiceAccount* the server is running.
+[^2] The order is sometimes sequential and sometimes parallel. For instance, it seems to first retrieve data for filters on the dashboard - and only after that it retrieves data for your visuals, that is sequential. However it might decide to parallelize and execute a number of SQL queries in parallel - this seems to happen when you have multiple filters on your dashboard.
+
