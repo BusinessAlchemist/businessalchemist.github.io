@@ -1,6 +1,12 @@
-## Part 2
+## Troubleshooting performance of tableau live connections to SQL Server - part 1. BASICS.
 
-Most frequent problems to be found at diagnostics stage:
+👋 Hello everyone, wish you enjoy reading these findings I've gathered over a couple of years working with this type of scenario
+This is part 2 where we discuss specific symptoms and troubleshooting steps
+
+### Not obvious stuff done by Tableau under-the-hood
+
+Here is a list of things that Tableau does to retrieve data for you - specifically the things that make your SQL Server yield suboptimal performance.
+
 1. Tableau generates a distinct query for each filter you have on a dashboard,
 2. Tableau executes queries sequentially (if there are too many – then it shows in performance),
 3. T. generates ugly joins
