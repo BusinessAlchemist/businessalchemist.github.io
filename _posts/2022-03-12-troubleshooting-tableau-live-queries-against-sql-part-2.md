@@ -1,4 +1,4 @@
-## Troubleshooting performance of tableau live connections to SQL Server - part 1. BASICS.
+## Troubleshooting performance of tableau live connections to SQL Server - part 2. DETAILS and ACTION.
 
 👋 Hello everyone, wish you enjoy reading these findings I've gathered over a couple of years working with this type of scenario
 This is part 2 where we discuss specific symptoms and troubleshooting steps.
