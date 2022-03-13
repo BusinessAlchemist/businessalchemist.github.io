@@ -24,8 +24,11 @@ Here is a list of things that Tableau does to retrieve data for you - and the th
 
    4. Tableau generates bad type conversions (i.e. call everything nvarchar (9000))
    📝 Ensure that your calculated measures avoid type casts - both implicit and explicit.
+   
    📝 Perform operations and comparisons within the same type - int being more preferred over strings or floats,
+   
    📝 Avoid concantenation of strings in measures
+   
    📝 If any of the above is strictly necessary, do them in SQL code.
    
    5. LOD’s.
