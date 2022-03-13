@@ -19,21 +19,18 @@ Here is a list of things that Tableau does to retrieve data for you - and the th
       Simple filters are normally better. I.e.:
          `WHERE a=1`
       normally works faster then
-         `WHERE a = CASE WHEN someNumber = 'one' THEN 1 ELSE 0 END`
-      📝 Make sure that your filters are expressed as simple as possible
+         `WHERE a = CASE WHEN someNumber = 'one' THEN 1 ELSE 0 END`   
+      📝 Make sure that your filters are expressed as simple as possible and use the unchanged columns from the data source.
 
-   4. Tableau generates bad type conversions (i.e. call everything nvarchar (9000))
-   📝 Ensure that your calculated measures avoid type casts - both implicit and explicit.
-   
-   📝 Perform operations and comparisons within the same type - int being more preferred over strings or floats,
-   
-   📝 Avoid concantenation of strings in measures
-   
-   📝 If any of the above is strictly necessary, do them in SQL code.
+   4. Tableau generates bad type conversions (i.e. call everything nvarchar (9000))   
+      📝 Ensure that your calculated measures avoid type casts - both implicit and explicit      
+      📝 Perform operations and comparisons within the same type - int being more preferred over strings or floats,   
+      📝 Avoid concantenation of strings in measures   
+      📝 If any of the above is strictly necessary, do them in SQL code.
    
    5. LOD’s.
-      LOD's - all of them - normally show up very poor in the SQL code - very detrimental for performance. They can always be replaced with subqueries in SQL that are much more deterministic in performance
-     📝 Use subqueries in SQL vs LOD's    
+      LOD's - all of them - normally show up very poor in the SQL code - very detrimental for performance. They can always be replaced with subqueries in SQL that are much more deterministic in performance   
+      📝 Use subqueries in SQL vs LOD's    
       
    6. Some formulas yield code like “CASE WHEN 1=0 THEN …. ELSE … END”,\
       If you see them, look for the column they reference and try to drop this column from the dashboard / guess the reason why such structure is added.
