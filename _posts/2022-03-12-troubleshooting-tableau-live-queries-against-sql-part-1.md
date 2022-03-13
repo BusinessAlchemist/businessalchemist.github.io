@@ -25,8 +25,7 @@ This is especially true when you are getting data from a view (or a chain of vie
 
 > note: if you want to skip to a list of concrete troubleshooting steps, please read part 2.
 
-Let's review what is happenning every time when a user presses a refresh button.
-_I'm drawing a simplified and not 100% strict, but useable description here_
+Let's review what is happenning every time when a user presses a refresh button. I may be drawing a simplified and not 100% strict description here, but I believe it is usable.
 
 Every time user clicks refresh:
 1. Tableau engine would create a set of SQL queries it deems necessary to (optimally) retrieve data from the DB.
