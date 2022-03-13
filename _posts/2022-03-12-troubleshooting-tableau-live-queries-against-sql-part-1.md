@@ -58,6 +58,5 @@ Well, there are (at least) 2 good ways to do this:
 
 Now that you know how to see the exact queries that are executed on the server, you can skip to part 2.
 
-[^1] If you're using tableau desktop, then the queries will use your AD account to authenticate and query SQL Server. If you are refreshing data from the Tableau server, it uses the *ServiceAccount* the server is running.
-[^2] The order is sometimes sequential and sometimes parallel. For instance, it seems to first retrieve data for filters on the dashboard - and only after that it retrieves data for your visuals, that is sequential. However it might decide to parallelize and execute a number of SQL queries in parallel - this seems to happen when you have multiple filters on your dashboard.
-
+[^1]: If you're using tableau desktop, then the queries will use your AD account to authenticate and query SQL Server. If you are refreshing data from the Tableau server, it uses the *ServiceAccount* the server is running.
+[^2]: The order is sometimes sequential and sometimes parallel. For instance, it tends to first retrieve data for filters on the dashboard - and only after that it retrieves data for your visuals, that is sequential. However it might decide to parallelize and execute a number of SQL queries in parallel - this seems to happen when you have multiple filters on your dashboard.
