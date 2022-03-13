@@ -11,7 +11,25 @@ There are use cases when you'd want to use *live* connection as opposed to *extr
 * or your application requires that live data is retrieved from the DB
 and many others.
 
+The problem is, this might not perform well out-of-the box.
+
 #### Problem description
 
-An often occuring problem is performance of such connections. You may have just a handful (<< 1mln) of rows in the source tables, but the views would take minutes to load.
+An often occuring problem is performance of such connections. You may have just a handful (<< 1mln) of rows in the source tables, but the dashboards would take minutes to load.
+This is especially true when you are getting data from a view (or a chain of views), not from a table.
+
+A note here: such design (chaining views) has been critisized a lot for poor performance - I even saw it tagged bad practice - but I'm a big supporter of that because it saves a lot of coding and code maintenance. I will probably blog about it at some point; for now - don't rush to materialize everything to tables.
+
+#### Why does it happen?
+
+Let's review what is happenning every time when a user presses a refresh button.
+_I'm drawing a simplified and not 100% strict, but useable description here_
+
+Every time user clicks refresh:
+1. Tableau engine would create a set of SQL queries it deems necessary to (optimally) retrieve data from the DB.
+2. These queries are then executed at the SQL server in some order,
+3. The DB, having received a query, determines the (optimal) execution plan and sends the results back to Tableau
+4. Tableau renders them in your viz.
+
+The problems mainly happen because the SQL code generated on step 1 is *tough* to optimize on step 3. And SQL Server takes a suboptimal execution path leading to long waits.
 
