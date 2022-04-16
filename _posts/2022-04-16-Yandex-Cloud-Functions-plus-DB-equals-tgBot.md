@@ -12,8 +12,10 @@ For database I had to choose Postgres even though major preference is SQL Server
 #### Learning 1. Only Postgres and Clickhouse work with YC Functions in the same network
 
 I wrote an YC Function with simple code to retrieve rows from a managed database on the same YC account. I expected that I needed no spphiaitcated network and security configuration, such as SSL certificates, because both services: code and db - resided in the same cloud.
-It turns out that it only holds true for postgres and clicshare dbs. The documentation article (link) avoids explicit claims that other DBs, such as SQL server, are not supported. It just doesn't give sample code for other choices.
-It becomes apparent in settings: postgres managed instances have a connector option, where's MySQL nor SQL server have them.
+It turns out that it only holds true for postgres and clicshare dbs. The documentation article (https://cloud.yandex.ru/docs/functions/operations/database-connection) avoids any explicit claims that other DBs, such as SQL server, are not supported. It just doesn't give sample code for other choices.
+However, it becomes apparent in settings: postgres managed instances have a connector option, where's MySQL nor SQL server have them.
+![image](https://user-images.githubusercontent.com/16839729/163674640-ae7a1de6-597e-43ce-9608-2347c0c1fa2b.png)
+
 There is a knowledge article that explains the (rather simple) steps to configure an YC function to interact with a postgres managed instance.
 [https://cloud.yandex.ru/docs/functions/operations/database-connection](https://cloud.yandex.ru/docs/functions/operations/database-connection)
 
@@ -21,23 +23,53 @@ There is a knowledge article that explains the (rather simple) steps to configur
 
 #### Learning 2. Connecting to Postgres from a .Net YC function to Postgres.
 
-In order to leverage integrated authentication, you’ll need to pass the *Context.securityToken* from the function to the db. To do this, you’ll first need to implement the YC interface so that your function actually recieves this context information.
+In order to leverage integrated authentication, you’ll need to pass the *Context.securityToken* from the function to the db. To do this, you’ll first need to implement the YC interface(https://cloud.yandex.ru/docs/functions/lang/csharp/model/yc-function) so that your function actually recieves this *context* information.
 Again, it's strange that it doesn't come in the default code, but your function handler should look something like this to receive Context information:
 
-<>
-
+     public string FunctionHandler(Request request, Yandex.Cloud.Functions.Context context)
+        {
+            ////Code goes here;
+        }
+        
 Then you’ll be able to pass the security token as a password to Postgres:
 
-<>
+  private NpgsqlConnection getConn(string accessTokenYC)
+        {
+            string connectionString = "Host='{YOURDBID}.postgresql-proxy.serverless.yandexcloud.net';" +
+                "Username='{YOURDBNAME}';" +
+                "Password='" + accessTokenYC + "';" +
+                "Database='{YOURDBID}';" +
+                "port=6432;" +
+                "sslmode='Require';" +
+                "Trust Server Certificate=true";
+            return new NpgsqlConnection(connectionString);
+        }
 
-Make sure that you've assigned a service account to the function:
+Make sure that you've assigned a *service account* to the function:
+
+![image](https://user-images.githubusercontent.com/16839729/163674813-3ad60249-0b43-432a-ad3e-aed6bc723d1c.png)
 
 → learning 2: implement the YC interface from start to receive security Context information - you'll need it to interact with other elements of the YC ecosystem.
 
 #### Learning 3. NuGet package versions: npgsql and newtonsoft.Json
 
 You’ll most likely need these 2 librararies mentioned above. It turns out that the latest versions may not work together.
-Newtonsoft’s latest version is (at the moment of writing) 13.0.0 and it fails with this error code:
-I found that the latest working version is 12.3.
-Same about npgsql. The latest version 6.0.0 fails with this conflict:
-These solutions from stack failed to help so I chose to check the older versions. It turned out that the version 5.7.3 was the one that doesn't have this conflict.
+Newtonsoft’s latest version is (at the moment of writing) 13.0.1 and it fails with this error code: *"Could not load file or assembly 'Newtonsoft.Json, Version=13.0.0.0..."*
+I found that the latest working version is 12.0.3.
+Same about npgsql. The latest version 6.0.0 fails with an conflict with System.Runtime.CompilerServices.Unsafe 6.0.0.
+A couple of solutions from stackoverflow failed to help so I chose to check the older versions. It turned out that the version 5.0.7 was the one that doesn't have this conflict.
+
+Here is the Dependencies file I've used for my project:
+
+  <Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3"/>
+      <PackageReference Include="Telegram.Bot" Version="17.0.0" />
+      <PackageReference Include="Yandex.Cloud.SDK" Version="1.1.0"/>
+      <PackageReference Include="Npgsql" Version="5.0.7"/>
+    </ItemGroup>
+  </Project>
+
