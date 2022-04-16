@@ -4,16 +4,19 @@ Hi there. I recently chose to try the Yandex Cloud suite to host a chatbot proje
 
 #### Brief overview of the project
 
-I needed to prototype a simple Telegram bot to manage a rather simple business process. Process steps are known, thus I chose the State Machine pattern. The users were expected to send only known commands and inputs, that is, I didn't need to care about parsing natural language.
+I needed to prototype a simple Telegram bot to manage a rather simple business process. Process steps are known, thus I chose the [State Machine](https://en.wikipedia.org/wiki/Finite-state_machine) pattern. The users were expected to send only known commands and inputs, that is, I didn't need to care about parsing natural language.
+
 I chose to implement the bot using c#/.Net core because of prior experience with this language. I need to note the scarcity of examples and documentation for .Net usage at Yandex Cloud. Python has been given much more love in that respect.
+
 For hosting I chose to use Yandex Cloud *Functions* (analogue of AWS Lambda). The reason being limited exposure to system configuration and wish to leverage the serverless setup.
-For database I had to choose Postgres even though major preference is SQL Server (overall and for this specific project). Thus, the first note.
+For database I had to choose Postgres even though my major preference is SQL Server (overall and for this specific project). Thus, the first note.
 
-#### Learning 1. Only Postgres and Clickhouse work with YC Functions in the same network
+#### Learning 1. Only Postgres and Clickhouse work with YC Functions without SSL configuration.
 
-I wrote an YC Function with simple code to retrieve rows from a managed database on the same YC account. I expected that I needed no spphiaitcated network and security configuration, such as SSL certificates, because both services: code and db - resided in the same cloud.
+I wrote an YC Function with simple code to retrieve rows from a managed database on the same YC account. I expected that I needed no sophiaitcated network and security configuration, such as SSL certificates, because both services: code and db - resided in the same cloud.
+
 It turns out that it only holds true for postgres and clicshare dbs. The documentation article (https://cloud.yandex.ru/docs/functions/operations/database-connection) avoids any explicit claims that other DBs, such as SQL server, are not supported. It just doesn't give sample code for other choices.
-However, it becomes apparent in settings: postgres managed instances have a connector option, where's MySQL nor SQL server have them.
+However, it becomes apparent in settings:
 ![image](https://user-images.githubusercontent.com/16839729/163674640-ae7a1de6-597e-43ce-9608-2347c0c1fa2b.png)
 
 There is a knowledge article that explains the (rather simple) steps to configure an YC function to interact with a postgres managed instance.
