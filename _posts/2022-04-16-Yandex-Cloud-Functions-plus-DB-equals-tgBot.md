@@ -25,14 +25,14 @@ There is a knowledge article that explains the (rather simple) steps to configur
 
 In order to leverage integrated authentication, you’ll need to pass the *Context.securityToken* from the function to the db. To do this, you’ll first need to implement the YC interface(https://cloud.yandex.ru/docs/functions/lang/csharp/model/yc-function) so that your function actually recieves this *context* information.
 Again, it's strange that it doesn't come in the default code, but your function handler should look something like this to receive Context information:
-
+```
      public string FunctionHandler(Request request, Yandex.Cloud.Functions.Context context)
         {
             ////Code goes here;
         }
-        
+```        
 Then you’ll be able to pass the security token as a password to Postgres:
-
+```
   private NpgsqlConnection getConn(string accessTokenYC)
         {
             string connectionString = "Host='{YOURDBID}.postgresql-proxy.serverless.yandexcloud.net';" +
@@ -44,7 +44,7 @@ Then you’ll be able to pass the security token as a password to Postgres:
                 "Trust Server Certificate=true";
             return new NpgsqlConnection(connectionString);
         }
-
+```
 Make sure that you've assigned a *service account* to the function:
 
 ![image](https://user-images.githubusercontent.com/16839729/163674813-3ad60249-0b43-432a-ad3e-aed6bc723d1c.png)
@@ -60,7 +60,7 @@ Same about npgsql. The latest version 6.0.0 fails with an conflict with System.R
 A couple of solutions from stackoverflow failed to help so I chose to check the older versions. It turned out that the version 5.0.7 was the one that doesn't have this conflict.
 
 Here is the Dependencies file I've used for my project:
-
+```
   <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
       <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -72,4 +72,4 @@ Here is the Dependencies file I've used for my project:
       <PackageReference Include="Npgsql" Version="5.0.7"/>
     </ItemGroup>
   </Project>
-
+```
